@@ -55,17 +55,29 @@ def submit():
     name = request.form['name']
     category = request.form['category']
     score = 0
+    results = []
+
     for i in range(10):
+        question = request.form.get(f'q{i}_question')
         selected = request.form.get(f'q{i}_answer')
         correct = request.form.get(f'q{i}_correct')
-        if selected == correct:
+        is_correct = selected == correct
+        results.append({
+            'question': question,
+            'selected': selected,
+            'correct': correct,
+            'is_correct': is_correct
+        })
+        if is_correct:
             score += 5
         else:
             score -= 2
+
     leaderboard.append({'name': name, 'score': score, 'category': category})
     with open(leaderboard_file, 'w') as f:
         json.dump(leaderboard, f)
-    return redirect(url_for('leaderboard_page'))
+
+    return render_template('results.html', name=name, score=score, results=results)
 
 @app.route('/leaderboard')
 def leaderboard_page():
