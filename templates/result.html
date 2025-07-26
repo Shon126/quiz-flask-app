@@ -5,26 +5,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Results for {{ name }}</h1>
-        <p>Category: {{ category }}</p>
-        <p>Final Score: <strong>{{ score }}</strong></p>
-
-        <h2>Your Answers</h2>
-        <ul>
-            {% for r in results %}
-                <li>
-                    Q{{ r.question_num }}:
-                    {% if r.is_correct %}
-                        ✅ Correct ({{ r.user_answer }})
-                    {% else %}
-                        ❌ Incorrect (You said "{{ r.user_answer }}", correct was "{{ r.correct_answer }}")
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-
-        <a href="{{ url_for('index') }}">Play Again</a>
-    </div>
+    <h1>Results for {{ name }}</h1>
+    <h2>Your Score: {{ score }}</h2>
+    <ul>
+        {% for result in results %}
+            <li>
+                <strong>Q:</strong> {{ result.question }}<br>
+                <strong>Your Answer:</strong> {{ result.selected }}<br>
+                <strong>Correct Answer:</strong> {{ result.correct }}<br>
+                {% if result.correct == result.selected %}
+                    ✅ Correct
+                {% else %}
+                    ❌ Incorrect
+                {% endif %}
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('index') }}">Play Again</a>
 </body>
 </html>
