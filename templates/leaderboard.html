@@ -14,9 +14,9 @@
                 <th>Score</th>
                 <th>Category</th>
             </tr>
-            {% for i, entry in enumerate(leaderboard) %}
+            {% for entry in leaderboard %}
                 <tr>
-                    <td>{{ i + 1 }}</td>
+                    <td>{{ loop.index }}</td>
                     <td>{{ entry.name }}</td>
                     <td>{{ entry.score }}</td>
                     <td>{{ entry.category }}</td>
