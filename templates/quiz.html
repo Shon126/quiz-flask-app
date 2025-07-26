@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiz Game by shon</title>
+    <title>Quiz - {{ category }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>{{ category }} Quiz</h1>
-        <p>Player: <strong>{{ name }}</strong></p>
+    <h1>{{ category }} Quiz</h1>
+    <form method="POST" action="{{ url_for('results') }}">
+        <input type="hidden" name="name" value="{{ name }}">
+        <input type="hidden" name="category" value="{{ category }}">
 
-        <form method="POST" action="/results">
-            {% for q in questions %}
-                {% set i = loop.index0 %}
-                <div class="question-block">
-                    <p><strong>Q{{ i + 1 }}: {{ q.question }}</strong></p>
-                    {% for option in q.options %}
-                        <label>
-                            <input type="radio" name="q{{ i }}" value="{{ option }}" required>
-                            {{ option }}
-                        </label><br>
-                    {% endfor %}
-                    <input type="hidden" name="correct{{ i }}" value="{{ q.answer }}">
-                </div>
-                <hr>
+        {% for q in questions %}
+        <div>
+            <p><strong>Q{{ loop.index }}:</strong> {{ q.question }}</p>
+            {% for option in q.options %}
+                <label>
+                    <input type="radio" name="q{{ loop.index0 }}_answer" value="{{ option }}" required>
+                    {{ option }}
+                </label><br>
             {% endfor %}
-            <input type="hidden" name="name" value="{{ name }}">
-            <input type="hidden" name="category" value="{{ category }}">
-            <button type="submit">Submit Answers</button>
-        </form>
-    </div>
+            <input type="hidden" name="q{{ loop.index0 }}_question" value="{{ q.question }}">
+            <input type="hidden" name="q{{ loop.index0 }}_correct" value="{{ q.answer }}">
+        </div>
+        <hr>
+        {% endfor %}
+
+        <button type="submit">Submit Quiz</button>
+    </form>
 </body>
 </html>
