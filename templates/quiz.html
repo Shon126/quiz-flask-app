@@ -2,18 +2,22 @@
     <input type="hidden" name="name" value="{{ name }}">
     <input type="hidden" name="category" value="{{ category }}">
 
+    {% set q_index = 0 %}
     {% for q in questions %}
         <div class="question">
-            <p><strong>Q{{ loop.index }}: {{ q['question'] }}</strong></p>
-            {% for opt in q['options'] %}
+            <p><strong>Q{{ loop.index }}: {{ q.question }}</strong></p>
+
+            {% for opt in q.options %}
                 <label>
-                    <input type="radio" name="q{{ loop.index0 }}_answer" value="{{ opt }}" required>
+                    <input type="radio" name="q{{ q_index }}_answer" value="{{ opt }}" required>
                     {{ opt }}
                 </label><br>
             {% endfor %}
-            <input type="hidden" name="q{{ loop.index0 }}_correct" value="{{ q['answer'] }}">
+
+            <input type="hidden" name="q{{ q_index }}_correct" value="{{ q.answer }}">
         </div>
         <hr>
+        {% set q_index = q_index + 1 %}
     {% endfor %}
 
     <button type="submit">Submit Answers</button>
