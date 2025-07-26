@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Quiz Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Quiz Game!</h1>
+        <form action="/start" method="post">
+            <label for="name">Enter your name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="category">Select category:</label>
+            <select id="category" name="category">
+                <option value="Maths">Maths</option>
+                <option value="General Knowledge">General Knowledge</option>
+                <option value="Science">Science</option>
+                <option value="History">History</option>
+            </select>
+
+            <button type="submit">Start Quiz</button>
+        </form>
+    </div>
+</body>
+</html>

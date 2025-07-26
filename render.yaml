@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: quiz-flask-app
+    runtime: python
+    buildCommand: ""
+    startCommand: gunicorn app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production

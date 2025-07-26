@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category }} Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>{{ category }} Quiz for {{ name }}</h2>
+        <form action="/submit" method="post">
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="category" value="{{ category }}">
+
+            {% for i, q in enumerate(questions) %}
+                <div class="question">
+                    <p><strong>Q{{ i+1 }}: {{ q['question'] }}</strong></p>
+                    {% for opt in q['options'] %}
+                        <label>
+                            <input type="radio" name="q{{ i }}_answer" value="{{ opt }}" required>
+                            {{ opt }}
+                        </label><br>
+                    {% endfor %}
+                    <input type="hidden" name="q{{ i }}_correct" value="{{ q['answer'] }}">
+                </div>
+                <hr>
+            {% endfor %}
+
+            <button type="submit">Submit Answers</button>
+        </form>
+    </div>
+</body>
+</html>

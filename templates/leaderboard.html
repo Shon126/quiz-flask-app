@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Leaderboard</h1>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Score</th>
+                <th>Category</th>
+            </tr>
+            {% for i, entry in enumerate(leaderboard) %}
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.score }}</td>
+                    <td>{{ entry.category }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <a href="{{ url_for('index') }}">Play Again</a>
+    </div>
+</body>
+</html>
