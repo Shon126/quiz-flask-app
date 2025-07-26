@@ -4,9 +4,9 @@ import json
 import datetime
 import os
 
-app = Flask(__name__)
+app = Flask(_name_)
 
-# Load questions from file
+# Load questions
 with open('questions.json') as f:
     all_questions = json.load(f)
 
@@ -18,7 +18,7 @@ if os.path.exists(leaderboard_file):
 else:
     leaderboard = []
 
-# Store leaderboard reset date
+# Last reset tracking
 reset_file = 'last_reset.txt'
 if not os.path.exists(reset_file):
     with open(reset_file, 'w') as f:
@@ -38,16 +38,16 @@ def reset_leaderboard_if_needed():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    reset_leaderboard_if_needed()
+    sorted_board = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    return render_template('index.html', leaderboard=sorted_board)
 
 @app.route('/quiz', methods=['POST'])
 def quiz():
     name = request.form['name']
     category = request.form['category']
-
     questions_pool = all_questions.get(category, [])
     selected_questions = random.sample(questions_pool, 10)
-
     return render_template('quiz.html', name=name, category=category, questions=selected_questions)
 
 @app.route('/submit', methods=['POST'])
@@ -55,7 +55,6 @@ def submit():
     name = request.form['name']
     category = request.form['category']
     score = 0
-
     for i in range(10):
         selected = request.form.get(f'q{i}_answer')
         correct = request.form.get(f'q{i}_correct')
@@ -63,11 +62,9 @@ def submit():
             score += 5
         else:
             score -= 2
-
     leaderboard.append({'name': name, 'score': score, 'category': category})
     with open(leaderboard_file, 'w') as f:
         json.dump(leaderboard, f)
-
     return redirect(url_for('leaderboard_page'))
 
 @app.route('/leaderboard')
@@ -76,6 +73,6 @@ def leaderboard_page():
     sorted_board = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
     return render_template('leaderboard.html', leaderboard=sorted_board)
 
-if __name__== '__main__':
-    port = int(os.environ.get('PORT', 10000))  # default 10000 for local dev
+if _name_ == '_main_':
+    port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
