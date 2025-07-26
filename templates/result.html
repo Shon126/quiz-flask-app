@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Results</title>
+</head>
+<body>
+    <h1>Quiz Results for {{ name }}</h1>
+    <h2>Your Score: {{ score }}</h2>
+
+    <table border="1">
+        <tr>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+            <th>Result</th>
+        </tr>
+        {% for item in results %}
+        <tr>
+            <td>{{ item.question }}</td>
+            <td>{{ item.selected }}</td>
+            <td>{{ item.correct }}</td>
+            <td>
+                {% if item.is_correct %}
+                    ✅ Correct
+                {% else %}
+                    ❌ Wrong
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br><br>
+    <a href="{{ url_for('index') }}">🏠 Back to Home</a>
+</body>
+</html>
