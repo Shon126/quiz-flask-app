@@ -13,14 +13,15 @@
         {% for q in questions %}
         <div>
             <p><strong>Q{{ loop.index }}:</strong> {{ q.question }}</p>
+            {% set q_index = loop.index0 %}
             {% for option in q.options %}
                 <label>
-                    <input type="radio" name="q{{ loop.index0 }}_answer" value="{{ option }}" required>
+                    <input type="radio" name="q{{ q_index }}_answer" value="{{ option }}" required>
                     {{ option }}
                 </label><br>
             {% endfor %}
-            <input type="hidden" name="q{{ loop.index0 }}_question" value="{{ q.question }}">
-            <input type="hidden" name="q{{ loop.index0 }}_correct" value="{{ q.answer }}">
+            <input type="hidden" name="q{{ q_index }}_question" value="{{ q.question }}">
+            <input type="hidden" name="q{{ q_index }}_correct" value="{{ q.answer }}">
         </div>
         <hr>
         {% endfor %}
