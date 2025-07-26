@@ -1,32 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ category }} Quiz</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h2>{{ category }} Quiz for {{ name }}</h2>
-        <form action="/submit" method="post">
-            <input type="hidden" name="name" value="{{ name }}">
-            <input type="hidden" name="category" value="{{ category }}">
+<form action="/submit" method="post">
+    <input type="hidden" name="name" value="{{ name }}">
+    <input type="hidden" name="category" value="{{ category }}">
 
-            {% for q in questions %}
-                <div class="question">
-                    <p><strong>Q{{ loop.index }}: {{ q['question'] }}</strong></p>
-                    {% for opt in q['options'] %}
-                        <label>
-                            <input type="radio" name="q{{ loop.index0 }}_answer" value="{{ opt }}" required>
-                            {{ opt }}
-                        </label><br>
-                    {% endfor %}
-                    <input type="hidden" name="q{{ loop.index0 }}_correct" value="{{ q['answer'] }}">
-                </div>
-                <hr>
+    {% for q in questions %}
+        <div class="question">
+            <p><strong>Q{{ loop.index }}: {{ q['question'] }}</strong></p>
+            {% for opt in q['options'] %}
+                <label>
+                    <input type="radio" name="q{{ loop.index0 }}_answer" value="{{ opt }}" required>
+                    {{ opt }}
+                </label><br>
             {% endfor %}
+            <input type="hidden" name="q{{ loop.index0 }}_correct" value="{{ q['answer'] }}">
+        </div>
+        <hr>
+    {% endfor %}
 
-            <button type="submit">Submit Answers</button>
-        </form>
-    </div>
-</body>
-</html>
+    <button type="submit">Submit Answers</button>
+</form>
