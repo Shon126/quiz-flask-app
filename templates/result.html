@@ -1,36 +1,33 @@
+<!-- templates/results.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Quiz Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Quiz Results for {{ name }}</h1>
-    <h2>Your Score: {{ score }}</h2>
+    <div class="container">
+        <h1>Quiz Results</h1>
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Score:</strong> {{ score }}</p>
 
-    <table border="1">
-        <tr>
-            <th>Question</th>
-            <th>Your Answer</th>
-            <th>Correct Answer</th>
-            <th>Result</th>
-        </tr>
-        {% for item in results %}
-        <tr>
-            <td>{{ item.question }}</td>
-            <td>{{ item.selected }}</td>
-            <td>{{ item.correct }}</td>
-            <td>
-                {% if item.is_correct %}
-                    ✅ Correct
-                {% else %}
-                    ❌ Wrong
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+        <h2>Your Answers:</h2>
+        <ul>
+            {% for result in results %}
+                <li>
+                    <strong>Q:</strong> {{ result.question }}<br>
+                    <strong>Your answer:</strong> {{ result.selected }}<br>
+                    {% if result.is_correct %}
+                        ✅ <strong>Correct</strong>
+                    {% else %}
+                        ❌ <strong>Incorrect</strong> (Correct answer: {{ result.correct }})
+                    {% endif %}
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
 
-    <br><br>
-    <a href="{{ url_for('index') }}">🏠 Back to Home</a>
+        <a href="{{ url_for('index') }}">Play Again</a>
+    </div>
 </body>
 </html>

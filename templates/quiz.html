@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiz</title>
+    <title>Quiz - {{ category }}</title>
 </head>
 <body>
-    <h1>{{ category }} Quiz</h1>
+    <h1>Quiz - {{ category }}</h1>
     <form method="POST" action="{{ url_for('submit') }}">
         <input type="hidden" name="name" value="{{ name }}">
         <input type="hidden" name="category" value="{{ category }}">
-        
+
         {% for q in questions %}
-            {% set i = loop.index0 %}
-            <p><strong>Q{{ i + 1 }}: {{ q['question'] }}</strong></p>
-            {% for option in q['options'] %}
-                <label>
-                    <input type="radio" name="q{{ i }}_answer" value="{{ option }}"> {{ option }}
-                </label><br>
-            {% endfor %}
-            <input type="hidden" name="q{{ i }}_correct" value="{{ q['answer'] }}">
+            <div>
+                <p><strong>Q{{ loop.index }}: {{ q.question }}</strong></p>
+                
+                <!-- Hidden fields to track question and correct answer -->
+                <input type="hidden" name="q{{ loop.index0 }}_question" value="{{ q.question }}">
+                <input type="hidden" name="q{{ loop.index0 }}_correct" value="{{ q.answer }}">
+
+                {% for option in q.options %}
+                    <label>
+                        <input type="radio" name="q{{ loop.parent.index0 }}_answer" value="{{ option }}" required>
+                        {{ option }}
+                    </label><br>
+                {% endfor %}
+            </div>
             <hr>
         {% endfor %}
 
-        <button type="submit">Submit</button>
+        <button type="submit">Submit Quiz</button>
     </form>
 </body>
 </html>
