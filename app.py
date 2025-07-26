@@ -4,7 +4,7 @@ import json
 import datetime
 import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Load questions
 with open('questions.json') as f:
@@ -73,6 +73,6 @@ def leaderboard_page():
     sorted_board = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
     return render_template('leaderboard.html', leaderboard=sorted_board)
 
-if _name_ == '_main_':
+if __name__== '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)

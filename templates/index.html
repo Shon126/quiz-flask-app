@@ -1,27 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Flask Quiz Game</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Quiz Game</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to the Quiz Game!</h1>
-        <form action="{{ url_for('quiz') }}" method="post">
-            <label for="name">Enter your name:</label>
-            <input type="text" id="name" name="name" required>
+    <h1>Welcome to the Quiz Game!</h1>
 
-            <label for="category">Select category:</label>
-            <select id="category" name="category" required>
-                <option value="">-- Choose Category --</option>
+    <form method="POST" action="{{ url_for('quiz') }}">
+        <label>Name: <input type="text" name="name" required></label><br>
+        <label>Category:
+            <select name="category" required>
                 <option value="Maths">Maths</option>
-                <option value="General Knowledge">General Knowledge</option>
                 <option value="Science">Science</option>
                 <option value="History">History</option>
+                <option value="General Knowledge">General Knowledge</option>
             </select>
+        </label><br>
+        <button type="submit">Start Quiz</button>
+    </form>
 
-            <button type="submit">Start Quiz</button>
-        </form>
-    </div>
+    <hr>
+
+    <h2>🏆 Leaderboard (Top 10)</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Category</th>
+        </tr>
+        {% for entry in leaderboard[:10] %}
+        <tr>
+            <td>{{ entry.name }}</td>
+            <td>{{ entry.score }}</td>
+            <td>{{ entry.category }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
