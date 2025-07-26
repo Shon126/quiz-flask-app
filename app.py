@@ -50,8 +50,8 @@ def quiz():
     selected_questions = random.sample(questions_pool, 10)
     return render_template('quiz.html', name=name, category=category, questions=selected_questions)
 
-@app.route('/submit', methods=['POST'])
-def submit():
+@app.route('/results', methods=['POST'])  # renamed from /submit to /results
+def results():
     name = request.form['name']
     category = request.form['category']
     score = 0
