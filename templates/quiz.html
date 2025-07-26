@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Quiz - {{ category }}</title>
+    <title>Quiz Game by shon</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h2>{{ category }} Quiz</h2>
-        <form method="post" action="/quiz">
-            {% for i, q in enumerate(questions) %}
+        <h1>{{ category }} Quiz</h1>
+        <p>Player: <strong>{{ name }}</strong></p>
+
+        <form method="POST" action="/results">
+            {% for q in questions %}
+                {% set i = loop.index0 %}
                 <div class="question-block">
-                    <p><strong>Q{{ i + 1 }}:</strong> {{ q['question'] }}</p>
-                    {% for option in q['options'] %}
+                    <p><strong>Q{{ i + 1 }}: {{ q.question }}</strong></p>
+                    {% for option in q.options %}
                         <label>
-                            <input type="radio" name="q{{ i }}_answer" value="{{ option }}" required>
+                            <input type="radio" name="q{{ i }}" value="{{ option }}" required>
                             {{ option }}
                         </label><br>
                     {% endfor %}
+                    <input type="hidden" name="correct{{ i }}" value="{{ q.answer }}">
                 </div>
-                <br>
+                <hr>
             {% endfor %}
-            <input type="submit" value="Submit Quiz">
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="category" value="{{ category }}">
+            <button type="submit">Submit Answers</button>
         </form>
     </div>
 </body>
