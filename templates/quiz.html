@@ -8,22 +8,28 @@
     <div class="container">
         <h1>{{ category }} Quiz</h1>
         <form method="POST" action="{{ url_for('results') }}">
-            <input type="hidden" name="name" value="{{ name }}">
-            <input type="hidden" name="category" value="{{ category }}">
+            <!-- Hidden values for name and category -->
+            <input type="hidden" name="name" value="{{ name|e }}">
+            <input type="hidden" name="category" value="{{ category|e }}">
 
             {% for q in questions %}
             <div class="question-block">
                 <p><strong>Q{{ loop.index }}:</strong> {{ q.question }}</p>
+
                 {% set q_index = loop.index0 %}
+
                 {% for option in q.options %}
                     <label>
-                        <input type="radio" name="q{{ q_index }}_answer" value="{{ option }}" required>
+                        <input type="radio" name="q{{ q_index }}_answer" value="{{ option|e }}" required>
                         {{ option }}
-                    </label>
+                    </label><br>
                 {% endfor %}
-                <input type="hidden" name="q{{ q_index }}_question" value="{{ q.question }}">
-                <input type="hidden" name="q{{ q_index }}_correct" value="{{ q.answer }}">
+
+                <!-- Hidden fields to pass question text and correct answer -->
+                <input type="hidden" name="q{{ q_index }}_question" value="{{ q.question|e }}">
+                <input type="hidden" name="q{{ q_index }}_correct" value="{{ q.answer|e }}">
             </div>
+            <hr>
             {% endfor %}
 
             <button type="submit">Submit Quiz</button>
