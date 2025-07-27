@@ -6,8 +6,9 @@ import os
 from db import init_db, add_score, get_top_20
 
 app = Flask(__name__)
+init_db()  # Ensure leaderboard table is created (for Render & local)
 
-# Load all questions
+# Load all questions once
 with open('questions.json') as f:
     all_questions = json.load(f)
 
@@ -70,6 +71,5 @@ def download_db():
     return send_file('leaderboard.db', as_attachment=True)
 
 if __name__== '__main__':
-    init_db()
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
