@@ -5,28 +5,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>{{ category }} Quiz</h1>
-    <form method="POST" action="{{ url_for('results') }}">
-        <input type="hidden" name="name" value="{{ name }}">
-        <input type="hidden" name="category" value="{{ category }}">
+    <div class="container">
+        <h1>{{ category }} Quiz</h1>
+        <form method="POST" action="{{ url_for('results') }}">
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="category" value="{{ category }}">
 
-        {% for q in questions %}
-        <div>
-            <p><strong>Q{{ loop.index }}:</strong> {{ q.question }}</p>
-            {% set q_index = loop.index0 %}
-            {% for option in q.options %}
-                <label>
-                    <input type="radio" name="q{{ q_index }}_answer" value="{{ option }}" required>
-                    {{ option }}
-                </label><br>
+            {% for q in questions %}
+            <div class="question-block">
+                <p><strong>Q{{ loop.index }}:</strong> {{ q.question }}</p>
+                {% set q_index = loop.index0 %}
+                {% for option in q.options %}
+                    <label>
+                        <input type="radio" name="q{{ q_index }}_answer" value="{{ option }}" required>
+                        {{ option }}
+                    </label>
+                {% endfor %}
+                <input type="hidden" name="q{{ q_index }}_question" value="{{ q.question }}">
+                <input type="hidden" name="q{{ q_index }}_correct" value="{{ q.answer }}">
+            </div>
             {% endfor %}
-            <input type="hidden" name="q{{ q_index }}_question" value="{{ q.question }}">
-            <input type="hidden" name="q{{ q_index }}_correct" value="{{ q.answer }}">
-        </div>
-        <hr>
-        {% endfor %}
 
-        <button type="submit">Submit Quiz</button>
-    </form>
+            <button type="submit">Submit Quiz</button>
+        </form>
+    </div>
 </body>
 </html>
