@@ -10,7 +10,8 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             score INTEGER NOT NULL,
-            category TEXT NOT NULL
+            category TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     conn.commit()
@@ -26,7 +27,13 @@ def add_score(name, score, category):
 def get_top_20():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute('SELECT name, score, category FROM leaderboard ORDER BY score DESC LIMIT 20')
+    # Prioritize higher score, then older submission (more fair)
+    c.execute('''
+        SELECT name, score, category 
+        FROM leaderboard 
+        ORDER BY score DESC, timestamp ASC 
+        LIMIT 20
+    ''')
     results = c.fetchall()
     conn.close()
     return results
