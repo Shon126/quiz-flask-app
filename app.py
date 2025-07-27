@@ -6,40 +6,40 @@ import os
 
 app = Flask(__name__)
 
-# Load questions
+# Load all questions
 with open('questions.json') as f:
     all_questions = json.load(f)
 
-# Load or initialize leaderboard
+# File paths
 leaderboard_file = 'leaderboard.json'
-if os.path.exists(leaderboard_file):
-    with open(leaderboard_file) as f:
-        leaderboard = json.load(f)
-else:
-    leaderboard = []
-
-# Last reset tracking
 reset_file = 'last_reset.txt'
+
+# Ensure reset timestamp file exists
 if not os.path.exists(reset_file):
     with open(reset_file, 'w') as f:
         f.write(str(datetime.datetime.now()))
 
+# Leaderboard auto-reset every 7 days
 def reset_leaderboard_if_needed():
     with open(reset_file, 'r') as f:
         last_reset = datetime.datetime.fromisoformat(f.read().strip())
     now = datetime.datetime.now()
     if (now - last_reset).days >= 7:
-        global leaderboard
-        leaderboard = []
         with open(leaderboard_file, 'w') as f:
-            json.dump(leaderboard, f)
+            json.dump([], f)
         with open(reset_file, 'w') as f:
             f.write(str(now))
 
 @app.route('/')
 def index():
     reset_leaderboard_if_needed()
-    sorted_board = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    try:
+        with open(leaderboard_file, 'r') as f:
+            leaderboard = json.load(f)
+    except FileNotFoundError:
+        leaderboard = []
+
+    sorted_board = sorted(leaderboard, key=lambda x: x['score'], reverse=True)[:20]
     return render_template('index.html', leaderboard=sorted_board)
 
 @app.route('/quiz', methods=['POST'])
@@ -50,7 +50,7 @@ def quiz():
     selected_questions = random.sample(questions_pool, 10)
     return render_template('quiz.html', name=name, category=category, questions=selected_questions)
 
-@app.route('/results', methods=['POST'])  # renamed from /submit to /results
+@app.route('/results', methods=['POST'])
 def results():
     name = request.form['name']
     category = request.form['category']
@@ -73,16 +73,34 @@ def results():
         else:
             score -= 2
 
-    leaderboard.append({'name': name, 'score': score, 'category': category})
+    # Load and update leaderboard
+    try:
+        with open(leaderboard_file, 'r') as f:
+            leaderboard = json.load(f)
+    except FileNotFoundError:
+        leaderboard = []
+
+    leaderboard.append({
+        'name': name,
+        'score': score,
+        'category': category
+    })
+
     with open(leaderboard_file, 'w') as f:
-        json.dump(leaderboard, f)
+        json.dump(leaderboard, f, indent=2)
 
     return render_template('results.html', name=name, score=score, results=results)
 
 @app.route('/leaderboard')
 def leaderboard_page():
     reset_leaderboard_if_needed()
-    sorted_board = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    try:
+        with open(leaderboard_file, 'r') as f:
+            leaderboard = json.load(f)
+    except FileNotFoundError:
+        leaderboard = []
+
+    sorted_board = sorted(leaderboard, key=lambda x: x['score'], reverse=True)[:20]
     return render_template('leaderboard.html', leaderboard=sorted_board)
 
 if __name__== '__main__':
